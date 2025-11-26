@@ -1,83 +1,91 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Brevis Demo Testnet — Interactive Demo</title>
-<!-- Chart.js for price chart -->
+
+<!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 :root{
-  --bg0:#0f1724; --bg1:#071428;
-  --card:#081427;
-  --accent1:#7c3aed; --accent2:#ffd400; --muted:#9aa6b2;
+  --bg0:#00111a; --bg1:#041827; --card:#071827;
+  --accent:#ffd400; --accent2:#7c3aed; --muted:#98a6b3;
   --success:#16a34a; --danger:#ff6b6b;
 }
-*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;padding:0;color:#e6eef6}
+*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;padding:0;color:#eaf6ff}
 body{background:linear-gradient(180deg,var(--bg0),var(--bg1));min-height:100vh;padding-bottom:40px}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-bottom:1px solid rgba(255,255,255,0.03)}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.03)}
 .brand{display:flex;gap:12px;align-items:center}
-.logo{width:56px;height:56px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.04)}
-.title{font-weight:800}
+.logo{width:56px;height:56px;border-radius:10px;object-fit:cover;border:2px solid rgba(0,0,0,0.2)}
+.title{font-weight:700}
 .small{font-size:13px;color:var(--muted)}
-
-.container{max-width:1200px;margin:20px auto;display:flex;gap:18px;padding:12px}
+.container{max-width:1150px;margin:18px auto;display:flex;gap:18px;padding:12px}
 .left{flex:1;display:flex;flex-direction:column;gap:14px}
 .right{width:420px;display:flex;flex-direction:column;gap:14px}
-.card{background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.005));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
-.btn{background:var(--accent2);color:#061320;padding:9px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:800}
-.btn.alt{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+.btn{background:var(--accent);color:#061320;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
 .area{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit}
+.row{display:flex;gap:8px;align-items:center}
 .logbox{background:#02101a;padding:10px;border-radius:8px;color:#bfe7ff;overflow:auto;height:220px;white-space:pre-wrap}
 .center{display:flex;align-items:center;justify-content:center;flex-direction:column}
-.kv{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
-
 .badge{font-size:12px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);color:var(--muted)}
-.leaderboard{display:flex;flex-direction:column;gap:8px}
-.small-muted{color:var(--muted);font-size:13px}
+.kv{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:6px}
 
 .modal-backdrop{position:fixed;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.55));display:flex;align-items:center;justify-content:center;z-index:200}
-.welcome-card{background:linear-gradient(135deg,#081828,#102a4a);padding:24px;border-radius:18px;max-width:920px;border:2px solid rgba(255,255,255,0.03);display:flex;gap:18px;align-items:center}
-.welcome-card .left{flex:0 0 200px}
-.welcome-card img{width:200px;height:200px;border-radius:18px;object-fit:cover;border:3px solid rgba(255,255,255,0.03)}
-.welcome-title{font-size:24px;font-weight:900;margin-bottom:6px}
-.welcome-desc{color:var(--muted);margin-bottom:12px}
-.quiz-card{background:linear-gradient(90deg,#0b1830,#082034);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
-.question{font-weight:700;margin-bottom:8px}
-.answer{display:flex;flex-direction:column;gap:8px}
-.answer button{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;cursor:pointer}
-.correct{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#061320}
-.step{padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.02);font-weight:700}
-@media(max-width:900px){.container{flex-direction:column}.right{width:100%}.welcome-card{flex-direction:column;text-align:center}.welcome-card .left{margin-bottom:12px}}
+.modal{background:linear-gradient(180deg,#0b1f2a,#092338);padding:18px;border-radius:18px;max-width:720px;border:2px solid rgba(255,255,255,0.02);box-shadow:0 20px 60px rgba(0,0,0,0.6);display:flex;gap:18px;align-items:center}
+.modal-1by1{width:560px;height:560px;padding:22px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.modal .left{flex:0 0 140px}
+.modal .left img{width:140px;height:140px;border-radius:14px;object-fit:cover;border:3px solid rgba(255,255,255,0.03)}
+.modal h2{margin:0 0 6px 0}
+.modal p{color:var(--muted);margin:0 0 12px 0}
+@media(max-width:900px){.container{flex-direction:column}.right{width:100%}.modal{flex-direction:column;text-align:center}.modal .left{margin-bottom:8px}.modal-1by1{width:90vw;height:auto}}
 
-/* small helpers */
-.green{color:var(--success)} .red{color:var(--danger)}
+.quiz-options{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.option{display:block;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;cursor:pointer}
+.option input{display:none}
+
+/* small helper for correct/incorrect coloring in quiz result */
+.option.correct{background:linear-gradient(90deg,#063d17,#1c7a3a);color:#eafef0}
+.option.wrong{background:linear-gradient(90deg,#3a0810,#8a1e2a);color:#ffe9e9}
+
+/* stepper */
+.step{padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);font-weight:700}
+.step.active{background:linear-gradient(90deg,var(--accent2),var(--accent));color:#061320}
+
+.small-muted{color:var(--muted);font-size:13px}
+.leaderboard{display:flex;flex-direction:column;gap:8px}
+.row-space{display:flex;justify-content:space-between;align-items:center}
+
+/* top-links */
+.top-links{display:flex;gap:10px;align-items:center}
+.top-links a{color:#9ae6b4;text-decoration:none;font-weight:600}
+
+/* clickable label pointer */
+label.option{cursor:pointer}
 </style>
 </head>
 <body>
 
-<!-- WELCOME (big 1:1 style card) -->
+<!-- WELCOME (1:1 styled square modal) -->
 <div id="welcome" class="modal-backdrop" role="dialog" aria-modal="true">
-  <div class="welcome-card" role="document">
-    <div class="left">
-      <img id="welcomeLogo" src="logo.png" alt="logo" />
+  <div class="modal modal-1by1" role="document" aria-labelledby="welcomeTitle">
+    <img id="welcomeLogo" src="logo.png" alt="logo" style="width:120px;height:120px;border-radius:14px;margin-bottom:12px" />
+    <h2 id="welcomeTitle">Welcome to Brevis Demo Testnet</h2>
+    <p class="small-muted" style="text-align:center;max-width:420px">
+      Learn & test Brevis-style flows: interactive faucet (quiz required), swap with gas simulation, XP & leaderboard, and live token chart — all simulated for teaching.
+    </p>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button id="startBtn" class="btn">Start Demo</button>
+      <button id="skipBtn" class="btn ghost">Skip</button>
     </div>
-    <div style="flex:1">
-      <div class="welcome-title">Welcome to the Brevis Demo Testnet</div>
-      <div class="welcome-desc">Learn core Brevis ideas, complete a 6-question quiz to claim faucet, try swap with gas simulation, earn XP, and climb the leaderboard — full real-feel demo.</div>
-
-      <div style="display:flex;gap:10px;align-items:center">
-        <button id="startBtn" class="btn">Start Demo</button>
-        <button id="openQuizBtn" class="btn alt">Take Faucet Quiz</button>
-        <button id="skipBtn" class="btn alt">Skip</button>
-      </div>
-
-      <div style="margin-top:10px" class="small-muted">
-        Links:
-        <a href="https://blog.brevis.network" target="_blank" style="color:#9ae6b4">Blog</a> •
-        <a id="discordLink" href="#" target="_blank" style="color:#9ae6b4">Discord</a> •
-        <a id="xLink" href="#" target="_blank" style="color:#9ae6b4">X</a>
-      </div>
+    <div style="margin-top:12px" class="small-muted">Links: 
+      <a href="https://discord.com/channels/1287736665103798433/1319430298265456803" target="_blank">Discord</a> • 
+      <a href="https://x.com/zama" target="_blank">X</a> • 
+      <a href="https://docs.zama.org/protocol" target="_blank">Docs</a>
     </div>
   </div>
 </div>
@@ -88,11 +96,12 @@ body{background:linear-gradient(180deg,var(--bg0),var(--bg1));min-height:100vh;p
     <img src="logo.png" class="logo" alt="logo" />
     <div>
       <div class="title">Brevis Demo Testnet</div>
-      <div class="small">Learn, test and feel a real testnet-like UI</div>
+      <div class="small">Real-feel demo — no real funds</div>
     </div>
   </div>
   <div style="display:flex;gap:12px;align-items:center">
-    <a id="docsLink" href="https://blog.brevis.network" target="_blank" class="small-muted" style="text-decoration:none">Docs / Blog</a>
+    <div class="small">Project: <a href="https://docs.zama.org/protocol" target="_blank" class="top-links">Docs</a></div>
+    <div class="small">Community: <a href="https://discord.com/channels/1287736665103798433/1319430298265456803" target="_blank" class="top-links">Discord</a></div>
     <div class="badge" id="xpBadge">XP: 0</div>
     <button id="connectBtn" class="btn">Connect Wallet</button>
   </div>
@@ -102,43 +111,43 @@ body{background:linear-gradient(180deg,var(--bg0),var(--bg1));min-height:100vh;p
 
   <section class="left">
 
-    <!-- Wallet & gated faucet -->
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center">
+    <!-- WALLET & FAUCET -->
+    <div class="card" id="walletCard">
+      <div class="row-space">
         <h3>Wallet & Faucet</h3>
-        <div class="small-muted">Chain: brevis-demo (9999)</div>
+        <div class="small-muted">Chain: <b>brevis-demo (9999)</b></div>
       </div>
 
       <div class="kv"><div class="small-muted">Address</div><div id="walletAddr">Not connected</div></div>
-      <div class="kv"><div class="small-muted">Balances</div><div id="balances">BREV: 0 • USDC: 0</div></div>
+      <div class="kv"><div class="small-muted">Balances</div><div id="balances">tBREVIS: 0 • tUSDC: 0</div></div>
 
-      <div style="margin-top:10px" class="small-muted">Name / Email (for claiming):</div>
-      <input id="claimId" class="area" placeholder="Enter name or email (claims once)" />
+      <div style="margin-top:10px" class="small-muted">Name / Email (required for faucet):</div>
+      <input id="claimId" class="area" placeholder="name or email (claim once)" />
 
       <div style="margin-top:12px;display:flex;gap:10px">
-        <button id="claimFaucetBtn" class="btn">Claim Faucet (after quiz)</button>
-        <button id="openQuizBtn2" class="btn alt">Open Faucet Quiz</button>
+        <button id="faucetZ" class="btn">Claim 100 tBREVIS</button>
+        <button id="faucetU" class="btn ghost">Claim 100 tUSDC</button>
       </div>
 
-      <div style="margin-top:10px" class="small-muted">Faucet gated: answer all 6 quiz questions correctly to claim (one claim per wallet or per email).</div>
+      <div style="margin-top:10px" class="small-muted">To claim faucet you must correctly answer 6 quick questions related to the project (helps community learn).</div>
     </div>
 
-    <!-- Swap -->
+    <!-- SWAP -->
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <h3>Swap (Demo)</h3>
-        <div class="small-muted">Rate: <span id="rateDisplay">1 BREV = 1.2 USDC</span></div>
+        <div class="small-muted">Rate: <span id="rateDisplay">1 tBREVIS = 1.2 tUSDC</span></div>
       </div>
 
       <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
         <select id="fromToken" class="area" style="width:140px">
-          <option value="BREV">BREV</option>
-          <option value="USDC">USDC</option>
+          <option value="BREVIS">tBREVIS</option>
+          <option value="USDC">tUSDC</option>
         </select>
 
         <select id="toToken" class="area" style="width:140px">
-          <option value="USDC">USDC</option>
-          <option value="BREV">BREV</option>
+          <option value="USDC">tUSDC</option>
+          <option value="BREVIS">tBREVIS</option>
         </select>
 
         <input id="amount" type="number" class="area" placeholder="Amount" style="width:120px" />
@@ -146,15 +155,15 @@ body{background:linear-gradient(180deg,var(--bg0),var(--bg1));min-height:100vh;p
       </div>
 
       <div style="margin-top:10px" class="small-muted">
-        <div>Swaps (this wallet): <b id="swapCount">0</b></div>
-        <label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="shareApr" /> Share APR on X after swap</label>
+        <div>Swaps done (this wallet): <b id="swapCount">0</b></div>
+        <label style="margin-top:6px"><input type="checkbox" id="shareApr" /> Share APR on X after swap</label>
       </div>
     </div>
 
-    <!-- Quests & XP -->
+    <!-- QUESTS / XP -->
     <div class="card">
       <h3>Quests & XP</h3>
-      <div class="small-muted">Do demo tasks to earn XP and climb the leaderboard.</div>
+      <div class="small-muted">Complete actions to earn XP and climb leaderboard.</div>
       <ul style="margin-top:10px">
         <li>Connect Wallet: <b>+10 XP</b></li>
         <li>Claim Faucet: <b>+20 XP</b></li>
@@ -168,81 +177,63 @@ body{background:linear-gradient(180deg,var(--bg0),var(--bg1));min-height:100vh;p
 
   <aside class="right">
 
-    <!-- Nodes -->
+    <!-- NODES -->
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <h3>MPC Nodes</h3>
-        <button id="refreshNodes" class="btn alt">Refresh</button>
+        <button id="refreshNodes" class="btn ghost" style="padding:6px 10px">Refresh</button>
       </div>
       <div id="nodes" class="small-muted" style="margin-top:8px">Loading nodes...</div>
     </div>
 
-    <!-- Price chart -->
+    <!-- TOKEN PRICE CHART -->
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <h3>Token Price</h3>
-        <div class="small-muted">Auto updating</div>
+        <div class="small-muted">Auto-updating chart</div>
       </div>
       <canvas id="priceChart" height="120" style="margin-top:8px"></canvas>
     </div>
 
-    <!-- Logs -->
+    <!-- LOGS / TX -->
     <div class="card">
       <h3>Transactions / Logs</h3>
       <div id="lastTx" class="small-muted">Last TX: -</div>
       <div id="logs" class="logbox" style="margin-top:8px">No logs yet</div>
-      <div style="margin-top:8px" class="row">
-        <button id="clearBtn" class="btn alt">Clear Logs</button>
-        <button id="resetBtn" class="btn alt">Reset Demo</button>
+      <div style="margin-top:8px;margin-bottom:4px" class="row">
+        <button id="clearBtn" class="btn ghost">Clear Logs</button>
+        <button id="resetBtn" class="btn ghost">Reset Demo (local)</button>
       </div>
     </div>
 
-    <!-- Leaderboard -->
+    <!-- LEADERBOARD -->
     <div class="card">
       <h3>Leaderboard</h3>
-      <div id="leaderboard" class="leaderboard small-muted" style="margin-top:8px">No entries yet</div>
+      <div id="leaderboard" class="leaderboard" style="margin-top:8px">No entries yet</div>
     </div>
 
   </aside>
 
 </main>
 
-<!-- Quiz modal (hidden initially) -->
-<div id="quizModal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.6);align-items:center;justify-content:center">
-  <div style="background:#071827;padding:18px;border-radius:12px;min-width:520px;color:#eaf6ff">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div style="font-weight:800">Faucet Quiz — Answer 6 Questions</div>
-      <button id="closeQuiz" class="btn alt" style="padding:6px 10px">Close</button>
-    </div>
-    <div id="quizArea" style="margin-top:12px"></div>
-    <div style="margin-top:12px;display:flex;justify-content:flex-end;gap:8px">
-      <button id="prevQ" class="btn alt">Prev</button>
-      <button id="nextQ" class="btn">Next</button>
-    </div>
-  </div>
-</div>
-
+<!-- QUIZ MODAL TEMPLATE (hidden, created by JS when needed) -->
+<!-- full scripts below -->
 <script>
-/* ---------- Demo engine ---------- */
+/* ---------- Demo engine (single file) ---------- */
+/* All text in English. Faucet requires 6-question quiz (all correct) to claim. */
 
-const discordUrl = "https://discord.com/channels/1287736665103798433/1319430298265456803";
-const xUrl = "https://x.com/brevis"; // placeholder (user can update)
-const docsUrl = "https://blog.brevis.network";
+/* Links provided earlier */
+const DISCORD_LINK = 'https://discord.com/channels/1287736665103798433/1319430298265456803';
+const X_LINK = 'https://x.com/zama';
+const DOCS_LINK = 'https://docs.zama.org/protocol';
 
-document.getElementById('discordLink').href = discordUrl;
-document.getElementById('xLink').href = xUrl;
-document.getElementById('docsLink').href = docsUrl;
-
-/* UI elements */
+/* DOM refs */
 const connectBtn = document.getElementById('connectBtn');
 const walletAddrEl = document.getElementById('walletAddr');
 const balancesEl = document.getElementById('balances');
-const claimIdInput = document.getElementById('claimId');
-const claimFaucetBtn = document.getElementById('claimFaucetBtn');
-const openQuizBtn = document.getElementById('openQuizBtn');
-const openQuizBtn2 = document.getElementById('openQuizBtn2');
-const startBtn = document.getElementById('startBtn');
-const skipBtn = document.getElementById('skipBtn');
+const faucetZ = document.getElementById('faucetZ');
+const faucetU = document.getElementById('faucetU');
+const claimId = document.getElementById('claimId');
 
 const fromToken = document.getElementById('fromToken');
 const toToken = document.getElementById('toToken');
@@ -255,180 +246,241 @@ const logsEl = document.getElementById('logs');
 const lastTxEl = document.getElementById('lastTx');
 const clearBtn = document.getElementById('clearBtn');
 const resetBtn = document.getElementById('resetBtn');
+
 const xpBadge = document.getElementById('xpBadge');
 const xpTotalEl = document.getElementById('xpTotal');
 const leaderboardEl = document.getElementById('leaderboard');
 const rateDisplay = document.getElementById('rateDisplay');
 
+const startBtn = document.getElementById('startBtn');
+const skipBtn = document.getElementById('skipBtn');
+const welcome = document.getElementById('welcome');
 const nodesEl = document.getElementById('nodes');
 const refreshNodes = document.getElementById('refreshNodes');
 
-const quizModal = document.getElementById('quizModal');
-const quizArea = document.getElementById('quizArea');
-const prevQ = document.getElementById('prevQ');
-const nextQ = document.getElementById('nextQ');
-const closeQuiz = document.getElementById('closeQuiz');
-
 const priceChartCtx = document.getElementById('priceChart').getContext('2d');
 
-/* State */
+/* state */
 let wallet = null;
-let balances = { BREV:0, USDC:0 };
+let balances = { BREVIS:0, USDC:0 };
 let logs = [];
 let xp = 0;
 let swapsDone = 0;
-let rate = 1.2;
-let priceData = { labels: [], data: [] };
+let rate = 1.2; // 1 BREVIS = 1.2 USDC
+let priceData = { labels:[], data:[] };
 
-/* Quiz questions (edit as needed) */
-const quizQuestions = [
-  { question: "Brevis is mainly for?", answers: ["Decentralized storage","Verifiable off-chain computation (ZK)","NFT marketplace","Centralized exchange"], correctIndex:1 },
-  { question: "What verifies off-chain results on-chain?", answers: ["Proofs (ZK proofs)","Oracles only","Manual audits","IPFS hashes"], correctIndex:0 },
-  { question: "Brevis helps apps by:", answers: ["Making UI prettier","Offloading heavy computation","Increasing gas fees","Reducing decentralization"], correctIndex:1 },
-  { question: "A demo 'testnet' should be used for:", answers: ["Production funds","Testing & learning","Tax filing","Mining BTC"], correctIndex:1 },
-  { question: "What is a faucet used for?", answers: ["Send real funds","Provide test tokens to users","Hack wallets","List tokens"], correctIndex:1 },
-  { question: "How to ensure fair faucet use?", answers: ["Unlimited claims","Require identity or quiz","No restrictions","Charge money"], correctIndex:1 }
+/* ************** QUIZ QUESTIONS ***************
+  6 example questions about Brevis / ZK / Proving Grounds.
+  You can edit questions/answers below if you'd like.
+*************************************************/
+const QUIZ_QUESTIONS = [
+  {
+    q: "What is Brevis primarily designed for?",
+    choices: ["On-chain storage", "Verifiable off-chain computation", "A layer-1 token", "NFT marketplace"],
+    a: 1
+  },
+  {
+    q: "Which technology does Brevis use to verify computations?",
+    choices: ["Merkle Trees", "Zero-knowledge proofs (ZK)", "PoW mining", "Sharding"],
+    a: 1
+  },
+  {
+    q: "Proving Grounds is best described as:",
+    choices: ["A token sale", "Community engagement & task event", "A mainnet", "A wallet app"],
+    a: 1
+  },
+  {
+    q: "What benefit does moving heavy compute off-chain give?",
+    choices: ["Makes on-chain cheap & fast", "Increases gas costs", "Removes verification", "Prevents audits"],
+    a: 0
+  },
+  {
+    q: "An example output of Brevis computation is:",
+    choices: ["Raw transaction", "Proof that a computation was done correctly", "A private key", "A new consensus algorithm"],
+    a: 1
+  },
+  {
+    q: "Should you treat this demo as real funds?",
+    choices: ["Yes, funds are real", "No, it's a simulated learning environment", "Only for big transfers", "Only for NFTs"],
+    a: 1
+  }
 ];
 
-let quizAnswers = new Array(quizQuestions.length).fill(null);
-let quizIndex = 0;
-
-/* Helpers */
+/* helpers: localStorage keys */
+function persistBalances(){ if(wallet) localStorage.setItem('demo_balances_' + wallet, JSON.stringify(balances)); }
+function loadBalances(){ if(wallet){ const b = localStorage.getItem('demo_balances_' + wallet); if(b) balances = JSON.parse(b); } }
 function pushLog(obj){
   obj.time = new Date().toLocaleTimeString();
   logs.unshift(obj);
   if(logs.length>200) logs.pop();
   renderLogs();
 }
-function renderLogs(){ logsEl.textContent = logs.map(l=>JSON.stringify(l,null,2)).join('\\n\\n'); lastTxEl.textContent = logs.find(l=>l.type==='tx_confirmed') ? ('Last TX: '+logs.find(l=>l.type==='tx_confirmed').tx) : 'Last TX: -'; }
-function updateBalancesUI(){ balancesEl.textContent = `BREV: ${balances.BREV} • USDC: ${balances.USDC}`; }
+function renderLogs(){ logsEl.textContent = logs.map(l=>JSON.stringify(l,null,2)).join('\\n\\n'); lastTxEl.textContent = logs.find(l=>l.type==='tx_confirmed') ? ('Last TX: ' + logs.find(l=>l.type==='tx_confirmed').tx) : 'Last TX: -'; }
+function updateBalancesUI(){ balancesEl.textContent = `tBREVIS: ${balances.BREVIS} • tUSDC: ${balances.USDC}`; }
 function updateXPUI(){ xpBadge.textContent = 'XP: ' + xp; xpTotalEl.textContent = xp; }
 function saveXP(){ if(wallet) localStorage.setItem('demo_xp_' + wallet, String(xp)); }
-function loadXP(){ if(wallet){ xp = parseInt(localStorage.getItem('demo_xp_' + wallet) || '0',10); }}
+function loadXP(){ if(wallet){ const v = localStorage.getItem('demo_xp_' + wallet); xp = v ? parseInt(v,10) : 0; } }
 
-/* Leaderboard update */
+/* leaderboard */
 function updateLeaderboard(){
-  const arr = [];
+  const data = [];
   for(let i=0;i<localStorage.length;i++){
     const k = localStorage.key(i);
     if(k && k.startsWith('demo_xp_')){
       const w = k.replace('demo_xp_','');
-      const v = parseInt(localStorage.getItem(k) || '0',10);
-      arr.push({wallet:w, xp:v});
+      const v = parseInt(localStorage.getItem(k)||'0',10);
+      data.push({wallet:w, xp:v});
     }
   }
-  arr.sort((a,b)=>b.xp-a.xp);
-  if(arr.length===0){ leaderboardEl.innerHTML = '<div class="small-muted">No entries yet</div>'; return; }
-  leaderboardEl.innerHTML = arr.slice(0,10).map((d,i)=>`<div style="display:flex;justify-content:space-between"><div>#${i+1} ${d.wallet}</div><div>${d.xp} XP</div></div>`).join('');
+  data.sort((a,b)=>b.xp-a.xp);
+  if(data.length===0){ leaderboardEl.innerHTML = '<div class="small-muted">No entries yet</div>'; return; }
+  leaderboardEl.innerHTML = data.slice(0,10).map((d,i)=>`<div class="row-space"><div>#${i+1} ${d.wallet}</div><div>${d.xp} XP</div></div>`).join('');
 }
 
-/* Wallet connect */
+/* wallet connect (fake) */
 connectBtn.addEventListener('click', ()=>{
   if(!wallet){
     wallet = '0x' + Math.random().toString(16).substr(2,12);
     connectBtn.textContent = 'Disconnect';
     walletAddrEl.textContent = wallet;
     pushLog({type:'wallet', event:'connected', address:wallet});
-    loadWalletData();
+    loadBalances();
+    const sc = localStorage.getItem('demo_swap_count_' + wallet) || '0';
+    swapsDone = parseInt(sc,10);
+    swapCountEl.textContent = swapsDone;
+    loadXP();
+    updateBalancesUI(); updateXPUI(); updateLeaderboard();
     grantXP(10,'Connect Wallet');
   } else {
     pushLog({type:'wallet', event:'disconnected', address:wallet});
     wallet = null;
-    connectBtn.textContent = 'Connect Wallet';
     walletAddrEl.textContent = 'Not connected';
-    balances = { BREV:0, USDC:0 };
-    xp = 0; swapsDone = 0;
+    connectBtn.textContent = 'Connect Wallet';
+    balances = { BREVIS:0, USDC:0 };
+    xp = 0;
+    swapsDone = 0;
     updateBalancesUI(); updateXPUI(); updateLeaderboard();
   }
 });
 
-function loadWalletData(){
-  const b = localStorage.getItem('demo_balances_' + wallet);
-  if(b) balances = JSON.parse(b);
-  swapsDone = parseInt(localStorage.getItem('demo_swap_count_' + wallet) || '0',10);
-  swapCountEl.textContent = swapsDone;
-  loadXP();
-  updateBalancesUI(); updateXPUI(); updateLeaderboard();
-}
-
-/* Faucet gating: must pass quiz and one claim per wallet/id */
-function claimKeyWallet(a){ return 'demo_claim_wallet_' + a; }
+/* faucet claim keys */
+function claimKeyWallet(addr){ return 'demo_claim_wallet_' + addr; }
 function claimKeyId(id){ return 'demo_claim_id_' + id; }
-function canClaim(w,a){ if(w && localStorage.getItem(claimKeyWallet(w))) return false; if(a && localStorage.getItem(claimKeyId(a))) return false; return true; }
-function markClaim(w,a){ if(w) localStorage.setItem(claimKeyWallet(w), JSON.stringify({time:new Date().toISOString()})); if(a) localStorage.setItem(claimKeyId(a), JSON.stringify({time:new Date().toISOString()})); }
-
-claimFaucetBtn.addEventListener('click', ()=>{
-  const id = (claimIdInput.value||'').trim();
-  if(!wallet && !id){ alert('Connect wallet or enter name/email to claim'); return; }
-  // check quiz completion
-  const allAnswered = quizAnswers.every(a=>a!==null);
-  const correctAll = quizAnswers.every((a,i)=>a===quizQuestions[i].correctIndex);
-  if(!allAnswered || !correctAll){
-    alert('You must complete the quiz and answer all questions correctly to claim faucet. Open the quiz now.');
-    openQuiz();
-    return;
-  }
-  if(!canClaim(wallet,id)){ alert('Faucet already claimed for this wallet or id'); return; }
-  // grant faucet
-  balances.BREV = Math.round((balances.BREV + 100) * 10000)/10000;
-  markClaim(wallet,id);
-  persistBalances();
-  updateBalancesUI();
-  pushLog({type:'faucet', token:'BREV', amount:100, by: wallet||id});
-  grantXP(20,'Claim Faucet');
-  alert('Faucet claimed: +100 BREV (demo)');
-});
-
-/* Quiz UI logic */
-function openQuiz(){ quizModal.style.display = 'flex'; renderQuiz(); }
-function closeQuizFunc(){ quizModal.style.display = 'none'; }
-openQuizBtn.addEventListener('click', openQuiz);
-openQuizBtn2.addEventListener('click', openQuiz);
-document.getElementById('closeQuiz').addEventListener('click', closeQuizFunc);
-let currentQ = 0;
-function renderQuiz(){
-  const q = quizQuestions[currentQ];
-  quizArea.innerHTML = `
-    <div class="quiz-card">
-      <div class="question">Q${currentQ+1}. ${q.question}</div>
-      <div class="answer" id="answersList"></div>
-      <div style="margin-top:8px" class="small-muted">Progress: ${currentQ+1}/${quizQuestions.length}</div>
-    </div>`;
-  const answersList = document.getElementById('answersList');
-  q.answers.forEach((a, idx)=>{
-    const b = document.createElement('button');
-    b.innerText = a;
-    b.onclick = ()=>{
-      quizAnswers[currentQ] = idx;
-      // mark correct/incorrect visually
-      Array.from(answersList.children).forEach(ch=>ch.classList.remove('correct'));
-      b.classList.add('correct');
-    };
-    // keep selected highlight if chosen earlier
-    if(quizAnswers[currentQ]===idx) b.classList.add('correct');
-    answersList.appendChild(b);
-  });
-  // prev/next controls
-  prevQ.disabled = currentQ===0;
-  nextQ.innerText = currentQ === quizQuestions.length-1 ? 'Finish' : 'Next';
+function canClaim(walletAddr, id){
+  if(walletAddr && localStorage.getItem(claimKeyWallet(walletAddr))) return false;
+  if(id && localStorage.getItem(claimKeyId(id))) return false;
+  return true;
 }
-prevQ.addEventListener('click', ()=>{
-  if(currentQ>0) currentQ--; renderQuiz();
-});
-nextQ.addEventListener('click', ()=>{
-  // require selection to proceed
-  if(quizAnswers[currentQ]===null){ alert('Select an answer to proceed'); return; }
-  if(currentQ < quizQuestions.length-1){ currentQ++; renderQuiz(); } 
-  else {
-    // finished; show result summary
-    const correctCount = quizAnswers.reduce((acc,a,i)=> acc + (a===quizQuestions[i].correctIndex?1:0), 0);
-    alert(`Quiz completed — ${correctCount}/${quizQuestions.length} correct.\nTo claim faucet, you need all answers correct.`);
-    closeQuizFunc();
-  }
-});
+function markClaim(walletAddr, id){
+  if(walletAddr) localStorage.setItem(claimKeyWallet(walletAddr), JSON.stringify({time:new Date().toISOString()}));
+  if(id) localStorage.setItem(claimKeyId(id), JSON.stringify({time:new Date().toISOString()}));
+}
 
-/* Persist balances */
-function persistBalances(){ if(wallet) localStorage.setItem('demo_balances_' + wallet, JSON.stringify(balances)); }
+/* Quiz modal builder - returns Promise that resolves true if all answers correct */
+function openQuizAndValidate() {
+  return new Promise((resolve) => {
+    // build overlay
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed'; overlay.style.inset='0'; overlay.style.display='flex'; overlay.style.alignItems='center'; overlay.style.justifyContent='center'; overlay.style.background='rgba(0,0,0,0.6)'; overlay.style.zIndex = 9999;
+    const box = document.createElement('div');
+    box.style.width = '760px'; box.style.maxWidth='92vw'; box.style.maxHeight = '90vh'; box.style.overflow='auto'; box.style.background = '#071827'; box.style.padding = '18px'; box.style.borderRadius = '12px';
+    box.innerHTML = `<h3 style="margin:0 0 6px 0">Faucet Quiz — Answer 6 Questions</h3>
+                     <p class="small-muted">You must answer all six correctly to claim the faucet. This helps teach the community.</p>
+                     <div id="quizContainer" style="margin-top:10px"></div>
+                     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px">
+                       <button id="quitQuiz" class="btn ghost">Cancel</button>
+                       <button id="submitQuiz" class="btn">Submit Answers</button>
+                     </div>
+                    `;
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    const quizContainer = box.querySelector('#quizContainer');
+    QUIZ_QUESTIONS.forEach((q, idx) => {
+      const qDiv = document.createElement('div');
+      qDiv.style.marginBottom = '12px';
+      qDiv.innerHTML = `<div style="font-weight:700">${idx+1}. ${q.q}</div>`;
+      const opts = document.createElement('div');
+      opts.className = 'quiz-options';
+      q.choices.forEach((c, ci) => {
+        // clickable label with radio input
+        const id = `q${idx}_opt${ci}_${Date.now()}_${Math.random().toString(36).slice(2,6)}`;
+        const label = document.createElement('label');
+        label.className = 'option';
+        label.htmlFor = id;
+        label.innerHTML = `<input type="radio" name="q${idx}" id="${id}" value="${ci}"> ${c}`;
+        opts.appendChild(label);
+      });
+      qDiv.appendChild(opts);
+      quizContainer.appendChild(qDiv);
+    });
+
+    // handlers
+    box.querySelector('#quitQuiz').onclick = () => { document.body.removeChild(overlay); resolve(false); };
+    box.querySelector('#submitQuiz').onclick = () => {
+      // collect answers
+      let allCorrect = true;
+      const resultDetails = [];
+      QUIZ_QUESTIONS.forEach((q, idx) => {
+        const sel = box.querySelector(`input[name="q${idx}"]:checked`);
+        const selected = sel ? parseInt(sel.value,10) : null;
+        const correct = (selected === q.a);
+        resultDetails.push({idx, selected, correct});
+        if(!correct) allCorrect = false;
+      });
+      // show feedback: color each option (correct/incorrect)
+      // find option labels and mark
+      QUIZ_QUESTIONS.forEach((q, idx) => {
+        const opts = box.querySelectorAll(`[name="q${idx}"]`);
+        opts.forEach(opt => {
+          const lab = opt.parentElement;
+          lab.classList.remove('correct','wrong');
+          const val = parseInt(opt.value,10);
+          if(val === q.a){ lab.classList.add('correct'); }
+          if(opt.checked && val !== q.a){ lab.classList.add('wrong'); }
+        });
+      });
+      // show message and resolve
+      setTimeout(() => {
+        if(allCorrect){
+          // success
+          const okDiv = document.createElement('div');
+          okDiv.style.marginTop='10px';
+          okDiv.innerHTML = `<div style="color:var(--success);font-weight:800">All correct — you can claim the faucet!</div>`;
+          box.appendChild(okDiv);
+          setTimeout(()=>{ document.body.removeChild(overlay); resolve(true); }, 900);
+        } else {
+          const noDiv = document.createElement('div');
+          noDiv.style.marginTop='10px';
+          noDiv.innerHTML = `<div style="color:var(--danger);font-weight:700">Some answers are incorrect. Review highlighted answers and try again.</div>`;
+          box.appendChild(noDiv);
+        }
+      }, 250);
+    };
+  });
+}
+
+/* faucet click -> run quiz first */
+async function handleFaucetClaim(token) {
+  const id = (claimId.value||'').trim();
+  if(!wallet && !id){ alert('Connect wallet or enter a name/email to claim'); return; }
+  if(!canClaim(wallet, id)){ alert('Faucet already claimed for this wallet or id'); return; }
+  // run quiz
+  const ok = await openQuizAndValidate();
+  if(!ok) return;
+  // grant token
+  const amount = 100;
+  if(token === 'BREVIS'){ balances.BREVIS = Math.round((balances.BREVIS + amount) * 10000)/10000; }
+  else { balances.USDC = Math.round((balances.USDC + amount) * 10000)/10000; }
+  pushLog({type:'faucet', token: token === 'BREVIS' ? 'tBREVIS' : 'tUSDC', amount, by: wallet||id});
+  markClaim(wallet, id);
+  persistBalances(); updateBalancesUI();
+  grantXP(20,'Claim Faucet');
+}
+
+/* attach faucet handlers */
+faucetZ.addEventListener('click', ()=> handleFaucetClaim('BREVIS'));
+faucetU.addEventListener('click', ()=> handleFaucetClaim('USDC'));
 
 /* Grant XP */
 function grantXP(amount, reason){
@@ -440,137 +492,178 @@ function grantXP(amount, reason){
   pushLog({type:'xp', amount, reason});
 }
 
-/* Swap modal and execution */
-function txHash(){ return '0x'+Math.random().toString(16).substr(2,12); }
+/* Swap UI and execution: multi-step modal with gas simulation */
+function createTxHash(){ return '0x' + Math.random().toString(16).substr(2,12); }
 
-function openSwapModalAndExecute(from, to, amount){
-  return new Promise((resolve,reject)=>{
-    const modal = document.createElement('div');
-    modal.style.position='fixed'; modal.style.inset='0'; modal.style.display='flex'; modal.style.alignItems='center'; modal.style.justifyContent='center';
-    modal.style.background='rgba(0,0,0,0.6)'; modal.style.zIndex=9999;
-    modal.innerHTML = `
-      <div style="background:#081827;padding:16px;border-radius:12px;min-width:360px;color:#eaf6ff">
-        <div style="font-weight:800;margin-bottom:8px">Swap: ${amount} ${from} → ${to}</div>
-        <div id="stepper" style="display:flex;gap:8px;margin-bottom:10px">
-          <div class="step active">1 Approve</div>
-          <div class="step">2 Processing</div>
-          <div class="step">3 Confirmed</div>
-        </div>
-        <div id="modalBody" style="min-height:90px">Waiting for approval...</div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
-          <button id="cancelSwap" style="padding:8px 10px;border-radius:8px;border:none;background:transparent;color:var(--muted);cursor:pointer">Cancel</button>
-          <button id="nextSwap" style="padding:8px 12px;border-radius:8px;border:none;background:var(--accent2);color:#061320;cursor:pointer">Approve</button>
-        </div>
+async function openSwapModalAndExecute(from, to, amount){
+  const modal = document.createElement('div');
+  modal.style.position='fixed'; modal.style.inset='0'; modal.style.display='flex'; modal.style.alignItems='center'; modal.style.justifyContent='center';
+  modal.style.background='rgba(0,0,0,0.6)'; modal.style.zIndex=9999;
+
+  modal.innerHTML = `
+    <div style="background:#071827;padding:18px;border-radius:12px;min-width:360px;color:#eaf6ff">
+      <div style="font-weight:800;margin-bottom:8px">Swap: ${amount} ${from} → ${to}</div>
+      <div id="stepper" style="display:flex;gap:8px;margin-bottom:12px">
+        <div class="step active">1 Approve</div>
+        <div class="step">2 Processing</div>
+        <div class="step">3 Confirmed</div>
       </div>
-    `;
-    document.body.appendChild(modal);
-    const stepEls = modal.querySelectorAll('.step');
-    const bodyEl = modal.querySelector('#modalBody');
-    const cancelBtn = modal.querySelector('#cancelSwap');
-    const nextBtn = modal.querySelector('#nextSwap');
+      <div id="modalBody" style="min-height:100px">Waiting for approval...</div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button id="cancelSwap" style="padding:8px 10px;border-radius:8px;border:none;background:transparent;color:var(--muted);cursor:pointer">Cancel</button>
+        <button id="nextSwap" style="padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#061320;cursor:pointer">Approve</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  const stepEls = modal.querySelectorAll('.step');
+  const bodyEl = modal.querySelector('#modalBody');
+  const cancelBtn = modal.querySelector('#cancelSwap');
+  const nextBtn = modal.querySelector('#nextSwap');
+
+  return new Promise((resolve,reject)=>{
     let step = 0;
-    const tx = txHash();
+    const txHash = createTxHash();
+    function setStep(n){
+      step = n;
+      stepEls.forEach((s,i)=> s.className = 'step' + (i===n ? ' active' : ''));
+    }
     cancelBtn.onclick = ()=>{ document.body.removeChild(modal); pushLog({type:'swap', event:'cancelled'}); reject('cancelled'); };
-    nextBtn.onclick = ()=>{
+    nextBtn.onclick = () => {
       if(step===0){
-        bodyEl.innerHTML = '<div class="small-muted">Approving token (simulated)...</div>';
-        stepEls[0].classList.remove('active'); stepEls[1].classList.add('active');
+        // Approve
+        bodyEl.innerHTML = `<div class="small-muted">Approving token... (simulated)</div>`;
+        setStep(0);
         nextBtn.disabled = true;
-        setTimeout(()=>{
-          // move to processing
-          bodyEl.innerHTML = '<div class="small-muted">Processing swap...</div>';
-          stepEls[1].classList.remove('active'); stepEls[2].classList.add('active');
-          // simulate processing delay
-          setTimeout(()=>{
+        setTimeout(()=>{ 
+          nextBtn.disabled=false; 
+          setStep(1); 
+          bodyEl.innerHTML = 'Swap processing...'; 
+          nextBtn.textContent = 'Processing...'; 
+          nextBtn.disabled=true;
+          // processing
+          setTimeout(()=> {
+            setStep(2);
             // gas simulation
-            const gasUsed = Math.floor(Math.random()*(90000-45000))+45000;
-            const gasPrice = (Math.random()*(3-1)+1).toFixed(2); // gwei
+            const gasUsed = Math.floor(Math.random() * (90000-45000)) + 45000;
+            const gasPrice = (Math.random() * (3-1) + 1).toFixed(2); // gwei
             const gasCost = (gasUsed * gasPrice * 1e-9).toFixed(6);
             const feePct = 0.005;
-            const received = (from==='BREV') ? (amount * rate * (1-feePct)) : ((amount / rate) * (1-feePct));
-            const rec = Math.round(received*10000)/10000;
+            const received = (from === 'BREVIS') ? (amount * rate * (1 - feePct)) : ((amount / rate) * (1 - feePct));
+            const receivedRounded = Math.round(received * 10000)/10000;
             bodyEl.innerHTML = `
               <div>Swap confirmed ✅</div>
-              <div style="margin-top:8px">Tx: <b>${tx}</b></div>
+              <div style="margin-top:8px">Tx: <b>${txHash}</b></div>
               <div style="margin-top:6px">Gas used: <b>${gasUsed}</b> • Gas price: <b>${gasPrice} gwei</b></div>
               <div style="margin-top:6px">Estimated gas cost (demo): <b>${gasCost}</b></div>
-              <div style="margin-top:6px">Received: <b>${rec} ${to}</b></div>
+              <div style="margin-top:6px">Received: <b>${receivedRounded} ${to}</b></div>
             `;
             // update balances
-            if(from==='BREV'){ balances.BREV = Math.round((balances.BREV - amount)*10000)/10000; balances.USDC = Math.round((balances.USDC + rec)*10000)/10000; }
-            else { balances.USDC = Math.round((balances.USDC - amount)*10000)/10000; balances.BREV = Math.round((balances.BREV + rec)*10000)/10000; }
+            if(from === 'BREVIS'){
+              balances.BREVIS = Math.round((balances.BREVIS - amount) * 10000)/10000;
+              balances.USDC = Math.round((balances.USDC + receivedRounded) * 10000)/10000;
+            } else {
+              balances.USDC = Math.round((balances.USDC - amount) * 10000)/10000;
+              balances.BREVIS = Math.round((balances.BREVIS + receivedRounded) * 10000)/10000;
+            }
             persistBalances(); updateBalancesUI();
-            const txObj = { type:'tx_confirmed', tx, from, to, amount, received:rec, gasUsed, gasPrice, gasCost };
+            const txObj = { type:'tx_confirmed', tx:txHash, from, to, amount, received:receivedRounded, gasUsed, gasPrice, gasCost };
             pushLog(txObj);
-            // swap counts & XP
             swapsDone = parseInt(localStorage.getItem('demo_swap_count_' + wallet) || '0',10) + 1;
             localStorage.setItem('demo_swap_count_' + wallet, String(swapsDone));
             swapCountEl.textContent = swapsDone;
-            if(swapsDone===1) grantXP(50,'First Swap');
-            if(swapsDone===5) grantXP(100,'5 Swaps Milestone');
-            // share on X if selected
+            if(swapsDone === 1) grantXP(50,'First Swap');
+            if(swapsDone === 5) grantXP(100,'5 Swaps Milestone');
             if(shareAprCheckbox.checked){
-              const projectLink = encodeURIComponent(docsUrl);
+              const projectLink = DOCS_LINK;
               const apr = 'APR: 12.5%';
-              const text = encodeURIComponent(`I tried the Brevis Demo — swapped ${amount} ${from} → ${rec} ${to}. ${apr} Learn: ${docsUrl} Created by @AmitKum955`);
+              const createdBy = '@AmitKum955';
+              const text = encodeURIComponent(`Tried the Brevis Demo Testnet — swapped ${amount} ${from} → ${receivedRounded} ${to}. ${apr} Learn: ${projectLink} Created by ${createdBy}`);
               window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
             }
             nextBtn.textContent = 'Close';
             nextBtn.disabled = false;
             nextBtn.onclick = ()=>{ document.body.removeChild(modal); resolve(txObj); };
-          }, 1000);
-        }, 800);
+          }, 1200);
+        }, 900);
       }
     };
   });
 }
 
-/* Swap button handler */
+/* swap handler */
 swapBtn.addEventListener('click', async ()=>{
   if(!wallet){ alert('Connect wallet first'); return; }
   const from = fromToken.value;
   const to = toToken.value;
   const amount = parseFloat(amountInput.value);
-  if(from===to){ alert('Select different tokens'); return; }
-  if(!amount || amount<=0){ alert('Enter valid amount'); return; }
-  const inToken = from==='BREV' ? 'BREV' : 'USDC';
+  if(from === to){ alert('Select different tokens'); return; }
+  if(!amount || amount<=0){ alert('Enter a valid amount'); return; }
+  const inToken = from === 'BREVIS' ? 'BREVIS' : 'USDC';
   if(balances[inToken] < amount){ alert('Insufficient balance. Use faucet.'); return; }
   try{
     pushLog({type:'swap_submitted', from, to, amount, status:'pending'});
-    await openSwapModalAndExecute(from,to,amount);
-  }catch(e){ pushLog({type:'swap_cancelled'}); }
+    await openSwapModalAndExecute(from, to, amount);
+  }catch(err){
+    pushLog({type:'swap_cancelled'});
+  }
 });
 
-/* Nodes */
-function renderNodes(){ const arr=[]; for(let i=1;i<=5;i++) arr.push({id:i, status: Math.random()>0.08 ? 'ONLINE' : 'OFFLINE'}); nodesEl.innerHTML = arr.map(n=>`Node ${n.id}: <span style="color:${n.status==='ONLINE'?'#6ee7b7':'#ff6b6b'}">${n.status}</span>`).join('<br>'); pushLog({type:'nodes', event:'refreshed', states:arr.map(x=>x.status)}); }
+/* nodes */
+function renderNodes(){
+  const arr = [];
+  for(let i=1;i<=5;i++){ arr.push({id:i, status: Math.random() > 0.08 ? 'ONLINE' : 'OFFLINE'}); }
+  nodesEl.innerHTML = arr.map(n=>`Node ${n.id}: <span style="color:${n.status==='ONLINE'?'#6ee7b7':'#ff6b6b'}">${n.status}</span>`).join('<br>');
+  pushLog({type:'nodes', event:'refreshed', states:arr.map(x=>x.status)});
+}
 refreshNodes.addEventListener('click', renderNodes);
 
-/* Price chart (random walk) */
+/* Chart: simulated price auto-update */
 let chart;
 function initChart(){
-  const now=Date.now(); priceData.labels=[]; priceData.data=[];
-  let p=rate;
-  for(let i=20;i>0;i--){ p = Math.max(0.05, p + (Math.random()-0.5)*0.03); priceData.labels.push(new Date(now - i*1000).toLocaleTimeString()); priceData.data.push(Math.round(p*10000)/10000); }
-  chart = new Chart(priceChartCtx, { type:'line', data:{ labels: priceData.labels, datasets:[{ label:'BREV price (vs USDC)', data: priceData.data, fill:false, tension:0.2 }] }, options:{ animation:false, scales:{ y:{ beginAtZero:false } } } });
-  setInterval(()=>{ const last = priceData.data[priceData.data.length-1]; const next = Math.max(0.05, Math.round((last + (Math.random()-0.5)*0.02)*10000)/10000); priceData.labels.push(new Date().toLocaleTimeString()); priceData.data.push(next); if(priceData.labels.length>30){ priceData.labels.shift(); priceData.data.shift(); } chart.data.labels = priceData.labels; chart.data.datasets[0].data = priceData.data; chart.update(); rate = next; rateDisplay.textContent = `1 BREV = ${Math.round(rate*100)/100} USDC`; }, 2500); 
+  const now = Date.now();
+  priceData.labels = [];
+  priceData.data = [];
+  let p = rate;
+  for(let i=20;i>0;i--){
+    p = Math.max(0.1, p + (Math.random()-0.5)*0.03);
+    priceData.labels.push(new Date(now - i*1000).toLocaleTimeString());
+    priceData.data.push(Math.round(p*10000)/10000);
+  }
+  chart = new Chart(priceChartCtx, {
+    type:'line',
+    data:{ labels: priceData.labels, datasets:[{ label:'tBREVIS price (vs tUSDC)', data: priceData.data, fill:false, tension:0.2 }] },
+    options:{ animation:false, scales:{ y:{ beginAtZero:false } } }
+  });
+  setInterval(()=> {
+    const last = priceData.data[priceData.data.length-1];
+    const next = Math.max(0.05, Math.round((last + (Math.random()-0.5)*0.02)*10000)/10000);
+    priceData.labels.push(new Date().toLocaleTimeString());
+    priceData.data.push(next);
+    if(priceData.labels.length>30){ priceData.labels.shift(); priceData.data.shift(); }
+    chart.data.labels = priceData.labels; chart.data.datasets[0].data = priceData.data; chart.update();
+    rate = next; rateDisplay.textContent = `1 tBREVIS = ${Math.round(rate*100)/100} tUSDC`;
+  }, 2500);
 }
 
-/* Utilities */
+/* utility UI */
 clearBtn.addEventListener('click', ()=>{ logs = []; renderLogs(); pushLog({type:'logs', event:'cleared'}); });
-resetBtn.addEventListener('click', ()=>{ if(confirm('Reset local demo data?')) { localStorage.clear(); location.reload(); } });
+resetBtn.addEventListener('click', ()=>{ if(confirm('Reset demo local data?')) { localStorage.clear(); location.reload(); } });
 
 /* Welcome controls */
-startBtn.addEventListener('click', ()=>{ document.getElementById('welcome').style.display='none'; pushLog({type:'demo', event:'started'}); });
-skipBtn.addEventListener('click', ()=>{ document.getElementById('welcome').style.display='none'; pushLog({type:'demo', event:'skipped'}); });
+startBtn.addEventListener('click', ()=>{ welcome.style.display = 'none'; pushLog({type:'demo', event:'started'}); });
+skipBtn.addEventListener('click', ()=>{ welcome.style.display = 'none'; pushLog({type:'demo', event:'skipped'}); });
 
-/* Persist balances helper */
-function persistBalances(){ if(wallet) localStorage.setItem('demo_balances_' + wallet, JSON.stringify(balances)); }
+/* init */
+renderNodes();
+initChart();
+renderLogs();
+updateBalancesUI();
+updateXPUI();
+updateLeaderboard();
 
-/* Init */
-renderNodes(); initChart(); renderLogs(); updateBalancesUI(); updateXPUI(); updateLeaderboard();
-
-/* Keyboard: W toggles welcome */
-document.addEventListener('keydown',(e)=>{ if(e.key && e.key.toLowerCase()==='w'){ const w = document.getElementById('welcome'); w.style.display = (w.style.display==='none' || w.style.display==='') ? 'flex' : 'none'; } });
+/* toggle welcome with W */
+document.addEventListener('keydown',(e)=>{ if(e.key && e.key.toLowerCase()==='w'){ welcome.style.display = welcome.style.display === 'none' ? 'flex' : 'none'; } });
 
 </script>
 </body>
