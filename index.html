@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Brevis Demo Testnet — Demo</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{
+  --bg0:#00111a; --bg1:#041827; --card:#071827;
+  --accent:#ffd400; --accent2:#22c55e; --muted:#98a6b3;
+  --success:#16a34a; --danger:#ff6b6b;
+}
+*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;padding:0;color:#eaf6ff}
+body{background:linear-gradient(180deg,var(--bg0),var(--bg1));min-height:100vh;padding-bottom:40px}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.03)}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:56px;height:56px;border-radius:10px;object-fit:cover;border:2px solid rgba(0,0,0,0.2)}
+.title{font-weight:700}
+.small{font-size:13px;color:var(--muted)}
+.container{max-width:1150px;margin:22px auto;display:flex;gap:18px;padding:12px}
+.left{flex:1;display:flex;flex-direction:column;gap:14px}
+.right{width:420px;display:flex;flex-direction:column;gap:14px}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+.btn{background:var(--accent);color:#061320;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+.area{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit}
+.row{display:flex;gap:8px;align-items:center}
+.logbox{background:#02101a;padding:10px;border-radius:8px;color:#bfe7ff;overflow:auto;height:220px;white-space:pre-wrap}
+.center{display:flex;align-items:center;justify-content:center;flex-direction:column}
+.badge{font-size:12px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);color:var(--muted)}
+.kv{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:6px}
+.modal-backdrop{position:fixed;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.55));display:flex;align-items:center;justify-content:center;z-index:200}
+.modal{background:linear-gradient(180deg,#071827,#0b2740);padding:26px;border-radius:16px;max-width:820px;border:2px solid rgba(255,255,255,0.02);box-shadow:0 20px 60px rgba(0,0,0,0.6);display:flex;gap:24px;align-items:center}
+.modal .left{flex:0 0 140px}
+.modal .left img{width:140px;height:140px;border-radius:14px;object-fit:cover;border:3px solid rgba(255,255,255,0.03)}
+.step{padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);font-weight:700}
+.step.active{background:linear-gradient(90deg,var(--accent2),var(--accent));color:#061320}
+.small-muted{color:var(--muted);font-size:13px}
+.leaderboard{display:flex;flex-direction:column;gap:8px}
+.row-space{display:flex;justify-content:space-between;align-items:center}
+@media(max-width:900px){.container{flex-direction:column}.right{width:100%}.modal{flex-direction:column;text-align:center}.modal .left{margin-bottom:8px}}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<!-- WELCOME -->
+<div id="welcome" class="modal-backdrop" role="dialog" aria-modal="true">
+  <div class="modal" role="document">
+    <div class="left">
+      <!-- Put your logo file named exactly 'logo.png' next to index.html -->
+      <img id="welcomeLogo" src="logo.png" alt="Brevis logo" />
+    </div>
+    <div style="flex:1">
+      <h2>Welcome — Brevis Demo Testnet</h2>
+      <p class="small-muted">A demo UI to help community learn Brevis concepts: faucet, swap flow, gas simulation, XP & leaderboard. Not a real chain.</p>
+      <div style="margin-top:12px" class="row">
+        <button id="startBtn" class="btn">Start Demo</button>
+        <button id="skipBtn" class="btn ghost">Skip</button>
+      </div>
+      <div style="margin-top:12px" class="small-muted">Learn more: <a href="https://blog.brevis.network" target="_blank">Brevis Blog</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="brand">
+    <img src="logo.png" class="logo" alt="logo" />
+    <div>
+      <div class="title">Brevis Demo Testnet</div>
+      <div class="small">Demo / Learning sandbox — Proving Grounds style</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;align-items:center">
+    <a href="https://blog.brevis.network" target="_blank" class="small">Blog</a>
+    <a href="https://x.com/zama" target="_blank" class="small">X</a>
+    <a href="https://discord.com/channels/1287736665103798433/1319430298265456803" target="_blank" class="small">Discord</a>
+    <div class="badge" id="xpBadge">XP: 0</div>
+    <button id="connectBtn" class="btn">Connect Wallet</button>
+  </div>
+</header>
+
+<main class="container" aria-live="polite">
+  <section class="left">
+    <!-- WALLET & FAUCET -->
+    <div class="card" id="walletCard">
+      <div class="row-space">
+        <h3>Wallet & Faucet</h3>
+        <div class="small-muted">Network: Brevis Demo</div>
+      </div>
+      <div class="kv"><div class="small-muted">Address</div><div id="walletAddr">Not connected</div></div>
+      <div class="kv"><div class="small-muted">Balances</div><div id="balances">tBREV: 0 • tUSDC: 0</div></div>
+      <div style="margin-top:10px" class="small-muted">Name / Email (required for faucet):</div>
+      <input id="claimId" class="area" placeholder="name or email (claim once)" />
+      <div style="margin-top:12px;display:flex;gap:10px">
+        <button id="faucetZ" class="btn">Claim 100 tBREV</button>
+        <button id="faucetU" class="btn ghost">Claim 100 tUSDC</button>
+      </div>
+      <div style="margin-top:10px" class="small-muted">Faucet: one claim per wallet OR one claim per name/email (saved in browser).</div>
+    </div>
+
+    <!-- SWAP -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>Swap (Demo)</h3>
+        <div class="small-muted">Rate: <span id="rateDisplay">1 tBREV = 1.2 tUSDC</span></div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+        <select id="fromToken" class="area" style="width:140px">
+          <option value="BREV">tBREV</option>
+          <option value="USDC">tUSDC</option>
+        </select>
+
+        <select id="toToken" class="area" style="width:140px">
+          <option value="USDC">tUSDC</option>
+          <option value="BREV">tBREV</option>
+        </select>
+
+        <input id="amount" type="number" class="area" placeholder="Amount" style="width:120px" />
+        <button id="swapBtn" class="btn">Swap</button>
+      </div>
+
+      <div style="margin-top:10px" class="small-muted">
+        <div>Swaps done (this wallet): <b id="swapCount">0</b></div>
+        <label style="margin-top:6px"><input type="checkbox" id="shareApr" /> Share APR on X after swap</label>
+      </div>
+    </div>
+
+    <!-- QUESTS / XP -->
+    <div class="card">
+      <h3>Quests & XP</h3>
+      <div class="small-muted">Complete demo actions to earn XP and climb the leaderboard.</div>
+      <ul style="margin-top:10px">
+        <li>Connect Wallet: <b>+10 XP</b></li>
+        <li>Claim Faucet: <b>+20 XP</b></li>
+        <li>First Swap: <b>+50 XP</b></li>
+        <li>Total 5 Swaps: <b>+100 XP</b></li>
+      </ul>
+      <div style="margin-top:8px" class="small-muted">Your XP: <b id="xpTotal">0</b></div>
+      <div style="margin-top:8px" class="small-muted">Leaderboard shows top wallets by XP.</div>
+    </div>
+
+  </section>
+
+  <aside class="right">
+
+    <!-- NODES -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>MPC / Proving Nodes</h3>
+        <button id="refreshNodes" class="btn ghost" style="padding:6px 10px">Refresh</button>
+      </div>
+      <div id="nodes" class="small-muted" style="margin-top:8px">Loading nodes...</div>
+      <div class="small-muted" style="margin-top:8px">Brevis Proving Grounds — demo mode.</div>
+    </div>
+
+    <!-- TOKEN PRICE CHART -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>Token Price (auto)</h3>
+        <div class="small-muted">Simulated live price</div>
+      </div>
+      <canvas id="priceChart" height="120" style="margin-top:8px"></canvas>
+    </div>
+
+    <!-- LOGS / TX -->
+    <div class="card">
+      <h3>Transactions / Logs</h3>
+      <div id="lastTx" class="small-muted">Last TX: -</div>
+      <div id="logs" class="logbox" style="margin-top:8px">No logs yet</div>
+      <div style="margin-top:8px;margin-bottom:4px" class="row">
+        <button id="clearBtn" class="btn ghost">Clear Logs</button>
+        <button id="resetBtn" class="btn ghost">Reset Demo</button>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div class="card">
+      <h3>Leaderboard</h3>
+      <div id="leaderboard" class="leaderboard" style="margin-top:8px">No entries yet</div>
+    </div>
+
+  </aside>
+</main>
+
+<script>
+/* ---------- Brevis Demo engine (single file) ---------- */
+/* Persist in localStorage for demo realism */
+
+const connectBtn = document.getElementById('connectBtn');
+const walletAddrEl = document.getElementById('walletAddr');
+const balancesEl = document.getElementById('balances');
+const faucetZ = document.getElementById('faucetZ');
+const faucetU = document.getElementById('faucetU');
+const claimId = document.getElementById('claimId');
+
+const fromToken = document.getElementById('fromToken');
+const toToken = document.getElementById('toToken');
+const amountInput = document.getElementById('amount');
+const swapBtn = document.getElementById('swapBtn');
+const swapCountEl = document.getElementById('swapCount');
+const shareAprCheckbox = document.getElementById('shareApr');
+
+const logsEl = document.getElementById('logs');
+const lastTxEl = document.getElementById('lastTx');
+const clearBtn = document.getElementById('clearBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+const xpBadge = document.getElementById('xpBadge');
+const xpTotalEl = document.getElementById('xpTotal');
+const leaderboardEl = document.getElementById('leaderboard');
+const rateDisplay = document.getElementById('rateDisplay');
+
+const startBtn = document.getElementById('startBtn');
+const skipBtn = document.getElementById('skipBtn');
+const welcome = document.getElementById('welcome');
+const nodesEl = document.getElementById('nodes');
+const refreshNodes = document.getElementById('refreshNodes');
+
+const priceChartCtx = document.getElementById('priceChart').getContext('2d');
+
+/* State */
+let wallet = null;
+let balances = { BREV:0, USDC:0 };
+let logs = [];
+let xp = 0;
+let swapsDone = 0;
+let rate = 1.2; // 1 tBREV = 1.2 tUSDC
+let priceData = { labels:[], data:[] };
+
+/* Helpers */
+function persistBalances(){ if(wallet) localStorage.setItem('demo_balances_' + wallet, JSON.stringify(balances)); }
+function loadBalances(){ if(wallet){ const b = localStorage.getItem('demo_balances_' + wallet); if(b) balances = JSON.parse(b); } }
+function pushLog(obj){
+  obj.time = new Date().toLocaleTimeString();
+  logs.unshift(obj);
+  if(logs.length>200) logs.pop();
+  renderLogs();
+}
+function renderLogs(){ logsEl.textContent = logs.map(l=>JSON.stringify(l,null,2)).join('\\n\\n'); lastTxEl.textContent = logs.find(l=>l.type==='tx_confirmed') ? ('Last TX: ' + logs.find(l=>l.type==='tx_confirmed').tx) : 'Last TX: -'; }
+function updateBalancesUI(){ balancesEl.textContent = `tBREV: ${balances.BREV} • tUSDC: ${balances.USDC}`; }
+function updateXPUI(){ xpBadge.textContent = 'XP: ' + xp; xpTotalEl.textContent = xp; }
+function saveXP(){ if(wallet) localStorage.setItem('demo_xp_' + wallet, String(xp)); }
+function loadXP(){ if(wallet){ const v = localStorage.getItem('demo_xp_' + wallet); xp = v ? parseInt(v,10) : 0; } }
+
+/* Leaderboard */
+function updateLeaderboard(){
+  const data = [];
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && k.startsWith('demo_xp_')){
+      const w = k.replace('demo_xp_','');
+      const v = parseInt(localStorage.getItem(k)||'0',10);
+      data.push({wallet:w, xp:v});
+    }
+  }
+  data.sort((a,b)=>b.xp-a.xp);
+  if(data.length===0){ leaderboardEl.innerHTML = '<div class="small-muted">No entries yet</div>'; return; }
+  leaderboardEl.innerHTML = data.slice(0,10).map((d,i)=>`<div class="row-space"><div>#${i+1} ${d.wallet}</div><div>${d.xp} XP</div></div>`).join('');
+}
+
+/* Wallet connect (fake) */
+connectBtn.addEventListener('click', ()=>{
+  if(!wallet){
+    wallet = '0x' + Math.random().toString(16).substr(2,12);
+    connectBtn.textContent = 'Disconnect'; walletAddrEl.textContent = wallet;
+    pushLog({type:'wallet', event:'connected', address:wallet});
+    loadBalances();
+    const sc = localStorage.getItem('demo_swap_count_' + wallet) || '0';
+    swapsDone = parseInt(sc,10); swapCountEl.textContent = swapsDone;
+    loadXP(); updateBalancesUI(); updateXPUI(); updateLeaderboard();
+    grantXP(10,'Connect Wallet');
+  } else {
+    pushLog({type:'wallet', event:'disconnected', address:wallet});
+    wallet = null; walletAddrEl.textContent = 'Not connected'; connectBtn.textContent = 'Connect Wallet';
+    balances = { BREV:0, USDC:0 }; xp = 0; swapsDone = 0; updateBalancesUI(); updateXPUI(); updateLeaderboard();
+  }
+});
+
+/* Faucet (one claim per wallet or id) */
+function claimKeyWallet(addr){ return 'demo_claim_wallet_' + addr; }
+function claimKeyId(id){ return 'demo_claim_id_' + id; }
+function canClaim(walletAddr, id){
+  if(walletAddr && localStorage.getItem(claimKeyWallet(walletAddr))) return false;
+  if(id && localStorage.getItem(claimKeyId(id))) return false;
+  return true;
+}
+function markClaim(walletAddr, id){
+  if(walletAddr) localStorage.setItem(claimKeyWallet(walletAddr), JSON.stringify({time:new Date().toISOString()}));
+  if(id) localStorage.setItem(claimKeyId(id), JSON.stringify({time:new Date().toISOString()}));
+}
+
+faucetZ.addEventListener('click', ()=>{
+  const id = (claimId.value||'').trim();
+  if(!wallet && !id){ alert('Connect wallet or enter a name/email to claim'); return; }
+  if(!canClaim(wallet, id)){ alert('Faucet already claimed for this wallet or id'); return; }
+  const amount = 100;
+  balances.BREV = Math.round((balances.BREV + amount) * 10000)/10000;
+  pushLog({type:'faucet', token:'tBREV', amount, by:wallet||id});
+  markClaim(wallet, id); persistBalances(); updateBalancesUI(); grantXP(20,'Claim Faucet');
+});
+
+faucetU.addEventListener('click', ()=>{
+  const id = (claimId.value||'').trim();
+  if(!wallet && !id){ alert('Connect wallet or enter a name/email to claim'); return; }
+  if(!canClaim(wallet, id)){ alert('Faucet already claimed for this wallet or id'); return; }
+  const amount = 100;
+  balances.USDC = Math.round((balances.USDC + amount) * 10000)/10000;
+  pushLog({type:'faucet', token:'tUSDC', amount, by:wallet||id});
+  markClaim(wallet, id); persistBalances(); updateBalancesUI(); grantXP(20,'Claim Faucet');
+});
+
+/* XP */
+function grantXP(amount, reason){
+  xp += amount; updateXPUI(); saveXP();
+  if(wallet) localStorage.setItem('demo_xp_' + wallet, String(xp));
+  updateLeaderboard(); pushLog({type:'xp', amount, reason});
+}
+
+/* Swap process: modal with steps + gas simulation */
+function createTxHash(){ return '0x' + Math.random().toString(16).substr(2,12); }
+
+async function openSwapModalAndExecute(from, to, amount){
+  const modal = document.createElement('div');
+  modal.style.position='fixed'; modal.style.inset='0'; modal.style.display='flex'; modal.style.alignItems='center'; modal.style.justifyContent='center';
+  modal.style.background='rgba(0,0,0,0.6)'; modal.style.zIndex=9999;
+  modal.innerHTML = `
+    <div style="background:#071827;padding:18px;border-radius:12px;min-width:360px;color:#eaf6ff">
+      <div style="font-weight:800;margin-bottom:8px">Swap: ${amount} ${from} → ${to}</div>
+      <div id="stepper" style="display:flex;gap:8px;margin-bottom:12px">
+        <div class="step active">1 Approve</div>
+        <div class="step">2 Processing</div>
+        <div class="step">3 Confirmed</div>
+      </div>
+      <div id="modalBody" style="min-height:80px">Waiting for approval...</div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button id="cancelSwap" style="padding:8px 10px;border-radius:8px;border:none;background:transparent;color:var(--muted);cursor:pointer">Cancel</button>
+        <button id="nextSwap" style="padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#061320;cursor:pointer">Approve</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  const stepEls = modal.querySelectorAll('.step');
+  const bodyEl = modal.querySelector('#modalBody');
+  const cancelBtn = modal.querySelector('#cancelSwap');
+  const nextBtn = modal.querySelector('#nextSwap');
+
+  return new Promise((resolve,reject)=>{
+    let step = 0;
+    let txHash = createTxHash();
+    function setStep(n){ step = n; stepEls.forEach((s,i)=> s.className = 'step' + (i===n ? ' active' : '')); }
+    cancelBtn.onclick = ()=>{ document.body.removeChild(modal); pushLog({type:'swap', event:'cancelled'}); reject('cancelled'); };
+    nextBtn.onclick = () => {
+      if(step===0){
+        bodyEl.innerHTML = `<div class="small-muted">Approving token... (simulated)</div>`;
+        setStep(0); nextBtn.disabled = true;
+        setTimeout(()=>{ nextBtn.disabled=false; setStep(1); bodyEl.innerHTML = 'Swap processing...'; nextBtn.textContent = 'Processing...'; nextBtn.disabled=true;
+          setTimeout(()=> {
+            setStep(2);
+            const gasUsed = Math.floor(Math.random() * (90000-45000)) + 45000;
+            const gasPrice = (Math.random() * (3-1) + 1).toFixed(2);
+            const gasCost = (gasUsed * gasPrice * 1e-9).toFixed(6);
+            const feePct = 0.005;
+            const received = (from === 'BREV') ? (amount * rate * (1 - feePct)) : ((amount / rate) * (1 - feePct));
+            const receivedRounded = Math.round(received * 10000)/10000;
+            bodyEl.innerHTML = `
+              <div>Swap confirmed ✅</div>
+              <div style="margin-top:8px">Tx: <b>${txHash}</b></div>
+              <div style="margin-top:6px">Gas used: <b>${gasUsed}</b> • Gas price: <b>${gasPrice} gwei</b></div>
+              <div style="margin-top:6px">Estimated gas cost (demo): <b>${gasCost}</b></div>
+              <div style="margin-top:6px">Received: <b>${receivedRounded} ${to}</b></div>
+            `;
+            if(from === 'BREV'){ balances.BREV = Math.round((balances.BREV - amount) * 10000)/10000; balances.USDC = Math.round((balances.USDC + receivedRounded) * 10000)/10000; }
+            else { balances.USDC = Math.round((balances.USDC - amount) * 10000)/10000; balances.BREV = Math.round((balances.BREV + receivedRounded) * 10000)/10000; }
+            persistBalances(); updateBalancesUI();
+            const txObj = { type:'tx_confirmed', tx:txHash, from, to, amount, received:receivedRounded, gasUsed, gasPrice, gasCost };
+            pushLog(txObj);
+            swapsDone = parseInt(localStorage.getItem('demo_swap_count_' + wallet) || '0',10) + 1;
+            localStorage.setItem('demo_swap_count_' + wallet, String(swapsDone)); swapCountEl.textContent = swapsDone;
+            if(swapsDone === 1) grantXP(50,'First Swap');
+            if(swapsDone === 5) grantXP(100,'5 Swaps Milestone');
+            if(shareAprCheckbox.checked){
+              const text = encodeURIComponent(`Tried the Brevis Demo Testnet — swapped ${amount} ${from} → ${receivedRounded} ${to}. Learn: https://blog.brevis.network`);
+              window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+            }
+            nextBtn.textContent = 'Close'; nextBtn.disabled = false; nextBtn.onclick = ()=>{ document.body.removeChild(modal); resolve(txObj); };
+          }, 1200);
+        }, 900);
+      }
+    };
+  });
+}
+
+/* Swap click */
+swapBtn.addEventListener('click', async ()=>{
+  if(!wallet){ alert('Connect wallet first'); return; }
+  const from = fromToken.value; const to = toToken.value; const amount = parseFloat(amountInput.value);
+  if(from === to){ alert('Select different tokens'); return; }
+  if(!amount || amount<=0){ alert('Enter a valid amount'); return; }
+  const inToken = from === 'BREV' ? 'BREV' : 'USDC';
+  if(balances[inToken] < amount){ alert('Insufficient balance. Use faucet.'); return; }
+  try{ pushLog({type:'swap_submitted', from, to, amount, status:'pending'}); await openSwapModalAndExecute(from,to,amount); }catch(err){ pushLog({type:'swap_cancelled'}); }
+});
+
+/* Nodes */
+function renderNodes(){
+  const arr = [];
+  for(let i=1;i<=5;i++){ arr.push({id:i, status: Math.random() > 0.08 ? 'ONLINE' : 'OFFLINE'}); }
+  nodesEl.innerHTML = arr.map(n=>`Node ${n.id}: <span style="color:${n.status==='ONLINE'?'#6ee7b7':'#ff6b6b'}">${n.status}</span>`).join('<br>');
+  pushLog({type:'nodes', event:'refreshed', states:arr.map(x=>x.status)});
+}
+refreshNodes.addEventListener('click', renderNodes);
+
+/* Chart */
+let chart;
+function initChart(){
+  const now = Date.now(); priceData.labels=[]; priceData.data=[];
+  let p = rate;
+  for(let i=20;i>0;i--){ p = Math.max(0.1, p + (Math.random()-0.5)*0.03); priceData.labels.push(new Date(now - i*1000).toLocaleTimeString()); priceData.data.push(Math.round(p*10000)/10000); }
+  chart = new Chart(priceChartCtx, { type:'line', data:{ labels: priceData.labels, datasets:[{ label:'tBREV price (vs tUSDC)', data: priceData.data, fill:false, tension:0.2 }] }, options:{ animation:false, scales:{ y:{ beginAtZero:false } } } });
+  setInterval(()=>{ const last = priceData.data[priceData.data.length-1]; const next = Math.max(0.05, Math.round((last + (Math.random()-0.5)*0.02)*10000)/10000); priceData.labels.push(new Date().toLocaleTimeString()); priceData.data.push(next); if(priceData.labels.length>30){ priceData.labels.shift(); priceData.data.shift(); } chart.data.labels = priceData.labels; chart.data.datasets[0].data = priceData.data; chart.update(); rate = next; rateDisplay.textContent = `1 tBREV = ${Math.round(rate*100)/100} tUSDC`; }, 2500);
+}
+
+/* UI utilities */
+clearBtn.addEventListener('click', ()=>{ logs=[]; renderLogs(); pushLog({type:'logs', event:'cleared'}); });
+resetBtn.addEventListener('click', ()=>{ if(confirm('Reset demo local data?')){ localStorage.clear(); location.reload(); } });
+
+/* Welcome controls */
+startBtn.addEventListener('click', ()=>{ welcome.style.display='none'; pushLog({type:'demo', event:'started'}); });
+skipBtn.addEventListener('click', ()=>{ welcome.style.display='none'; pushLog({type:'demo', event:'skipped'}); });
+
+/* init */
+renderNodes(); initChart(); renderLogs(); updateBalancesUI(); updateXPUI(); updateLeaderboard();
+
+/* keyboard */
+document.addEventListener('keydown',(e)=>{ if(e.key && e.key.toLowerCase()==='w'){ welcome.style.display = welcome.style.display === 'none' ? 'flex' : 'none'; } });
+
+</script>
+</body>
+</html>
