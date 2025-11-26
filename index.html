@@ -11,45 +11,69 @@
   --bg0:#07121b; --bg1:#082433; --card:#0c2736;
   --accent:#ffcc33; --accent2:#6c5ce7; --muted:#9fb0bd;
   --success:#16a34a; --danger:#ff6b6b;
+  --glass: rgba(255,255,255,0.04);
+  --glass-2: rgba(255,255,255,0.02);
 }
+
+/* Base */
 *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;padding:0;color:#e9f7ff}
 body{background:linear-gradient(180deg,var(--bg0),var(--bg1));min-height:100vh;padding:20px}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(255,255,255,0.02);border-radius:12px}
-.brand{display:flex;gap:12px;align-items:center}
-.logo{width:56px;height:56px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.04)}
-.title{font-weight:800}
+
+/* Topbar */
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;padding:14px 18px;
+  background:linear-gradient(90deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+  border-radius:14px;border:1px solid rgba(255,255,255,0.02);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+.brand{display:flex;gap:14px;align-items:center}
+.logo{width:64px;height:64px;border-radius:14px;object-fit:cover;border:3px solid rgba(255,255,255,0.03)}
+.title{font-weight:900;font-size:18px;letter-spacing:0.2px}
 .small{font-size:13px;color:var(--muted)}
+
+/* Layout */
 .container{max-width:1200px;margin:20px auto;display:flex;gap:18px}
 .left{flex:1;display:flex;flex-direction:column;gap:14px}
 .right{width:420px;display:flex;flex-direction:column;gap:14px}
-.card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
-.btn{background:var(--accent);color:#061320;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
-.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
-.area{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit}
-.logbox{background:#021825;padding:10px;border-radius:8px;color:#bfe7ff;overflow:auto;height:220px;white-space:pre-wrap}
-.kv{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:6px}
-.badge{font-size:12px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);color:var(--muted)}
-.leaderboard{display:flex;flex-direction:column;gap:8px}
 
-/* Welcome 1:1 square modal */
+/* Cards */
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
+  padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,0.02);
+  box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+}
+h3{font-weight:900;margin:0 0 8px 0}
+
+/* Buttons & inputs */
+.btn{background:linear-gradient(90deg,var(--accent2),var(--accent));color:#061320;padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:900;box-shadow:0 6px 18px rgba(108,92,231,0.12)}
+.btn.ghost{background:transparent;border:1px solid var(--glass);color:var(--muted);font-weight:800}
+.area{width:100%;padding:12px;border-radius:12px;border:1px solid var(--glass);background:transparent;color:inherit;font-weight:700}
+.logbox{background:#021825;padding:12px;border-radius:10px;color:#bfe7ff;overflow:auto;height:240px;white-space:pre-wrap;font-size:13px}
+.badge{font-size:12px;padding:6px 8px;border-radius:8px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:var(--muted);font-weight:800}
+.kv{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:6px;font-weight:800}
+
+/* Modal (1:1) */
 .modal-backdrop{position:fixed;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.55));display:flex;align-items:center;justify-content:center;z-index:999}
-.modal{width:520px;height:520px;border-radius:18px;background:linear-gradient(135deg,#082433,#0b2f48);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;border:2px solid rgba(255,255,255,0.03);box-shadow:0 30px 80px rgba(0,0,0,0.6)}
-.modal img{width:160px;height:160px;border-radius:16px;border:3px solid rgba(255,255,255,0.04);object-fit:cover}
-.modal h2{font-size:22px;margin:0}
-.modal p{color:var(--muted);text-align:center;margin:0 18px}
-.modal .ctas{display:flex;gap:10px}
+.modal{width:520px;height:520px;border-radius:20px;background:linear-gradient(135deg,#0b2f48,#08354a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;border:2px solid rgba(255,255,255,0.03);box-shadow:0 30px 80px rgba(0,0,0,0.6)}
+.modal img{width:160px;height:160px;border-radius:18px;border:4px solid rgba(255,255,255,0.04);object-fit:cover}
+.modal h2{font-size:22px;font-weight:900}
+.modal p{color:var(--muted);text-align:center;margin:0 18px;font-weight:700}
 
-/* Quiz styles */
-.quiz-option{display:block;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);margin-top:8px;cursor:pointer;background:transparent}
-.quiz-option:hover{border-color:rgba(255,255,255,0.08)}
-.quiz-option.selected{background:linear-gradient(90deg,var(--accent2),var(--accent));color:#061320;border:1px solid rgba(0,0,0,0.15)}
+/* Quiz */
+.quiz-option{display:block;padding:12px;border-radius:12px;border:1px solid var(--glass);margin-top:10px;cursor:pointer;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));font-weight:800}
+.quiz-option:hover{transform:translateY(-4px);transition:0.12s;border-color:rgba(255,255,255,0.06)}
+.quiz-option.selected{outline:3px solid rgba(108,92,231,0.18);box-shadow:0 8px 20px rgba(108,92,231,0.12)}
+.quiz-option.correct{background:linear-gradient(90deg, rgba(22,163,74,0.12), rgba(22,163,74,0.06));border:2px solid rgba(22,163,74,0.25);color:var(--success);font-weight:900}
+.quiz-option.wrong{background:linear-gradient(90deg, rgba(255,107,107,0.08), rgba(255,107,107,0.03));border:2px solid rgba(255,107,107,0.2);color:var(--danger);font-weight:900}
+
+/* Stepper */
+.step{padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.02);font-weight:900}
+.step.active{background:linear-gradient(90deg,var(--accent2),var(--accent));color:#061320;box-shadow:0 8px 20px rgba(108,92,231,0.12)}
+
+/* Other small tweaks */
 .small-muted{color:var(--muted);font-size:13px}
-
-/* swap modal stepper */
-.step{padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.02)}
-.step.active{background:linear-gradient(90deg,var(--accent2),var(--accent));color:#061320;font-weight:800}
-
-/* responsive */
+.leaderboard{display:flex;flex-direction:column;gap:8px}
+.row-space{display:flex;justify-content:space-between;align-items:center}
 @media(max-width:900px){ .container{flex-direction:column} .right{width:100%} .modal{width:92vw;height:92vw} }
 </style>
 </head>
@@ -61,11 +85,11 @@ body{background:linear-gradient(180deg,var(--bg0),var(--bg1));min-height:100vh;p
     <img id="welcomeLogo" src="logo.png" alt="logo"/>
     <h2 id="welcomeTitle">Welcome to the Brevis Demo Testnet</h2>
     <p class="small-muted">Interactive sandbox: answer quick questions to claim faucet, try swap with gas simulation, earn XP & compete on the leaderboard. This is a learning demo — no real funds.</p>
-    <div class="ctas">
+    <div style="display:flex;gap:12px">
       <button id="startBtn" class="btn">Start Demo</button>
       <button id="skipBtn" class="btn ghost">Skip</button>
     </div>
-    <div class="small-muted" style="margin-top:6px">Project: <a href="https://blog.brevis.network/" target="_blank" style="color:#9ae6b4">Brevis Blog</a> • Created by <b>@AmitKum955</b></div>
+    <div class="small-muted" style="margin-top:6px">Project: <a href="https://blog.brevis.network/" target="_blank" style="color:#9ae6b4">Brevis Blog</a> • Created by <b style="font-weight:900">@AmitKum955</b></div>
   </div>
 </div>
 
@@ -79,7 +103,7 @@ body{background:linear-gradient(180deg,var(--bg0),var(--bg1));min-height:100vh;p
     </div>
   </div>
 
-  <div style="display:flex;gap:10px;align-items:center">
+  <div style="display:flex;gap:12px;align-items:center">
     <a href="https://discord.com/channels/1287736665103798433/1319430298265456803" target="_blank" class="small" style="text-decoration:none;color:var(--muted)">Discord</a>
     <a href="https://x.com/zama" target="_blank" class="small" style="text-decoration:none;color:var(--muted)">X</a>
     <a href="https://docs.zama.org/protocol" target="_blank" class="small" style="text-decoration:none;color:var(--muted)">Docs</a>
@@ -116,15 +140,13 @@ body{background:linear-gradient(180deg,var(--bg0),var(--bg1));min-height:100vh;p
     <!-- Quiz card (hidden until opened) -->
     <div class="card" id="quizCard" style="display:none">
       <h3>Quick Quiz — answer correctly to claim faucet</h3>
-      <div id="quizArea" style="margin-top:10px">
-        <!-- Question will be injected here -->
-      </div>
+      <div id="quizArea" style="margin-top:10px"></div>
       <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
         <button id="quizPrev" class="btn ghost">Previous</button>
         <button id="quizNext" class="btn">Next</button>
         <div style="margin-left:auto" class="small-muted">Progress: <span id="quizProgress">0/6</span></div>
       </div>
-      <div style="margin-top:8px" class="small-muted">You need all 6 correct to unlock faucet. Questions show one-by-one.</div>
+      <div style="margin-top:8px" class="small-muted">You need all 6 correct to unlock faucet. Questions show one-by-one. Correct answers will be highlighted green, wrong red after finishing.</div>
     </div>
 
     <!-- Swap -->
@@ -422,7 +444,7 @@ function giveFaucet(){
     return;
   }
   // award tokens
-  balances.BREV = Math.round((balances.BREV + 200) * 10000)/10000; // give more (200) to be helpful
+  balances.BREV = Math.round((balances.BREV + 200) * 10000)/10000; // give more (200)
   balances.USDC = Math.round((balances.USDC + 50) * 10000)/10000;
   persistBalances();
   updateBalancesUI();
@@ -450,8 +472,8 @@ viewQuizBtn.addEventListener('click', showQuiz);
 function renderQuiz(){
   const q = quizQuestions[quizIndex];
   quizArea.innerHTML = `
-    <div style="font-weight:800">Question ${quizIndex+1} of ${quizQuestions.length}</div>
-    <div style="margin-top:8px;font-size:15px">${q.q}</div>
+    <div style="font-weight:900;color:var(--accent2)">Question ${quizIndex+1} of ${quizQuestions.length}</div>
+    <div style="margin-top:8px;font-size:15px;font-weight:800">${q.q}</div>
     <div id="options" style="margin-top:10px"></div>
   `;
   const opts = document.getElementById('options');
@@ -460,7 +482,7 @@ function renderQuiz(){
     btn.className = 'quiz-option' + (quizSelections[quizIndex] === idx ? ' selected' : '');
     btn.textContent = opt;
     btn.onclick = ()=> {
-      // clickable — select/unselect
+      // select
       quizSelections[quizIndex] = idx;
       // update selection visuals
       Array.from(opts.children).forEach((c,i)=> c.className = 'quiz-option' + (i===idx ? ' selected' : '') );
@@ -468,7 +490,6 @@ function renderQuiz(){
     opts.appendChild(btn);
   });
   quizProgress.textContent = `${quizIndex+1}/${quizQuestions.length}`;
-  // Prev / Next button state
   quizPrev.disabled = quizIndex === 0;
   quizNext.textContent = quizIndex === quizQuestions.length - 1 ? 'Finish' : 'Next';
 }
@@ -482,20 +503,61 @@ quizNext.addEventListener('click', ()=>{
   if(quizSelections[quizIndex] === null){ alert('Please select an option to proceed'); return; }
   // If last, evaluate
   if(quizIndex === quizQuestions.length - 1){
-    // evaluate score
+    // evaluate score and show answer coloring
     quizCorrectCount = 0;
+    // color each question's option elements (we'll display review)
+    // Instead of reusing same DOM, build a review view
+    const review = document.createElement('div');
+    review.innerHTML = '<div style="font-weight:900;margin-bottom:8px">Review answers</div>';
+    quizQuestions.forEach((qq,i)=>{
+      const block = document.createElement('div');
+      block.style.marginTop = '10px';
+      const qtitle = document.createElement('div');
+      qtitle.style.fontWeight = '800';
+      qtitle.textContent = `Q${i+1}. ${qq.q}`;
+      block.appendChild(qtitle);
+      qq.options.forEach((opt,j)=>{
+        const optEl = document.createElement('div');
+        optEl.className = 'quiz-option';
+        optEl.style.marginTop = '6px';
+        optEl.textContent = opt;
+        // mark correct/wrong
+        if(j === qq.answer){
+          optEl.classList.add('correct');
+        }
+        if(quizSelections[i] === j && quizSelections[i] !== qq.answer){
+          optEl.classList.add('wrong');
+        }
+        block.appendChild(optEl);
+      });
+      review.appendChild(block);
+    });
+    quizArea.innerHTML = '';
+    quizArea.appendChild(review);
+
+    // compute correct count
     for(let i=0;i<quizQuestions.length;i++){
       if(quizSelections[i] === quizQuestions[i].answer) quizCorrectCount++;
     }
+
     if(quizCorrectCount === quizQuestions.length){
       alert('Excellent! You answered all questions correctly. Faucet is unlocked.');
       hideQuiz();
-      // mark that faucet can be claimed and auto-give faucet
       giveFaucet();
     } else {
-      alert(`You answered ${quizCorrectCount} / ${quizQuestions.length} correctly. You need all correct to automatically receive faucet. You can try again.`);
-      // show which ones are wrong — simple feedback
-      showQuiz();
+      alert(`You answered ${quizCorrectCount} / ${quizQuestions.length} correctly. You need all correct to automatically receive faucet. You can review answers (green = correct) and try again.`);
+      // keep review visible so user sees correct/wrong coloring
+      quizPrev.disabled = false;
+      quizNext.textContent = 'Retry';
+      quizNext.onclick = ()=> {
+        // reset to initial state for retry
+        quizIndex = 0;
+        quizSelections = new Array(quizQuestions.length).fill(null);
+        quizCorrectCount = 0;
+        renderQuiz();
+        // restore original next handler after resetting
+        quizNext.onclick = defaultQuizNextHandler;
+      };
     }
     return;
   }
@@ -503,9 +565,11 @@ quizNext.addEventListener('click', ()=>{
   renderQuiz();
 });
 
+/* Save default next handler to restore later when needed */
+const defaultQuizNextHandler = quizNext.onclick;
+
 /* XP awarding */
 function grantXP(amount, reason){
-  // guard: if wallet not connected, still grant XP to local anonymous? We'll only store by wallet
   xp += amount;
   updateXPUI();
   if(wallet) localStorage.setItem('demo_xp_' + wallet, String(xp));
@@ -532,7 +596,7 @@ function openSwapModalAndExecute(from, to, amount){
         <div id="modalBody" style="min-height:80px" class="small-muted">Waiting for approval...</div>
         <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
           <button id="cancelSwap" style="padding:8px 10px;border-radius:8px;border:none;background:transparent;color:var(--muted);cursor:pointer">Cancel</button>
-          <button id="nextSwap" style="padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#061320;cursor:pointer">Approve</button>
+          <button id="nextSwap" style="padding:8px 12px;border-radius:8px;border:none;background:linear-gradient(90deg,var(--accent2),var(--accent));color:#061320;cursor:pointer">Approve</button>
         </div>
       </div>
     `;
@@ -570,7 +634,7 @@ function openSwapModalAndExecute(from, to, amount){
             const received = (from === 'BREV') ? (amount * rate * (1 - feePct)) : ((amount / rate) * (1 - feePct));
             const receivedRounded = Math.round(received * 10000)/10000;
             bodyEl.innerHTML = `
-              <div>Swap confirmed ✅</div>
+              <div style="font-weight:900;color:var(--accent2)">Swap confirmed ✅</div>
               <div style="margin-top:8px">Tx: <b>${tx}</b></div>
               <div style="margin-top:6px">Gas used: <b>${gasUsed}</b> • Gas price: <b>${gasPrice} gwei</b></div>
               <div style="margin-top:6px">Estimated gas (demo): <b>${gasCost}</b></div>
@@ -645,7 +709,7 @@ function initChart(){
   }
   chart = new Chart(priceChartCtx, {
     type:'line',
-    data:{ labels: priceData.labels, datasets:[{ label:'tBREV price (vs tUSDC)', data: priceData.data, fill:false, tension:0.25 }] },
+    data:{ labels: priceData.labels, datasets:[{ label:'tBREV price (vs tUSDC)', data: priceData.data, fill:true, tension:0.25, backgroundColor:'rgba(108,92,231,0.08)', borderColor:'#6c5ce7' }] },
     options:{ animation:false, scales:{ y:{ beginAtZero:false } } }
   });
   setInterval(()=> {
@@ -678,9 +742,8 @@ updateLeaderboard();
 /* Keyboard W toggles welcome */
 document.addEventListener('keydown', (e)=>{ if(e.key && e.key.toLowerCase()==='w'){ welcome.style.display = welcome.style.display === 'none' ? 'flex' : 'none'; } });
 
-/* Ensure quiz variables exist globally */
+/* Expose quizQuestions for debugging if needed */
 window.quizQuestions = quizQuestions;
-
 </script>
 </body>
 </html>
