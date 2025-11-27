@@ -84,9 +84,10 @@ strong{font-weight:800}
   </div>
 
   <div style="display:flex;gap:12px;align-items:center">
-    <a href="https://discord.com/channels/1287736665103798433/1319430298265456803" target="_blank" class="small" style="text-decoration:none;color:var(--muted)">Discord</a>
-    <a href="https://x.com/zama" target="_blank" class="small" style="text-decoration:none;color:var(--muted)">X</a>
-    <a href="https://docs.zama.org/protocol" target="_blank" class="small" style="text-decoration:none;color:var(--muted)">Docs</a>
+    <!-- UPDATED LINKS: Brevis -->
+    <a href="https://discord.com/channels/1245615396254650378/1399263756931960925" target="_blank" class="small" style="text-decoration:none;color:var(--muted)">Discord</a>
+    <a href="https://x.com/brevis_zk" target="_blank" class="small" style="text-decoration:none;color:var(--muted)">X</a>
+    <a href="https://pico-docs.brevis.network/" target="_blank" class="small" style="text-decoration:none;color:var(--muted)">Docs</a>
     <div class="badge" id="xpBadge">XP: 0</div>
     <button id="connectBtn" class="btn">Connect Wallet</button>
   </div>
@@ -287,7 +288,7 @@ function pushLog(obj){
   renderLogs();
 }
 function renderLogs(){
-  logsEl.textContent = logs.map(l=>JSON.stringify(l,null,2)).join('\\n\\n');
+  logsEl.textContent = logs.map(l=>JSON.stringify(l,null,2)).join('\n\n');
   const confirmed = logs.find(l=>l.type === 'tx_confirmed');
   lastTxEl.textContent = confirmed ? ('Last TX: ' + confirmed.tx) : 'Last TX: -';
 }
@@ -354,7 +355,8 @@ function markClaim(addr,name){
   if(name) localStorage.setItem(claimKeyName(name), JSON.stringify({time:new Date().toISOString()}));
 }
 
-faucetBtn.addEventListener('click', ()=>{
+/* Hook faucet button (element id exists above) */
+document.getElementById('claimFaucetBtn').addEventListener('click', ()=>{
   if(quizCorrectCount === quizQuestions.length){
     giveFaucet();
     return;
@@ -411,12 +413,13 @@ function renderQuiz(){
     // immediate feedback on click
     btn.onclick = () => {
       if(btn.classList.contains('disabled')) return;
+      // If already selected for this question, do nothing
+      if(quizSelections[quizIndex] !== null) return;
       // mark selection
       quizSelections[quizIndex] = idx;
       // mark correct/wrong visually
       if(idx === qObj.answer){
         btn.classList.add('correct');
-        quizCorrectCount += (quizSelections[quizIndex] === idx ? 1 : 0); // ensure counting only once per question
       } else {
         btn.classList.add('wrong');
       }
@@ -557,7 +560,7 @@ function openSwapModalAndExecute(from, to, amount){
             // optional share
             if(shareAprCheckbox.checked){
               const projectLink = 'https://blog.brevis.network/';
-              const text = encodeURIComponent(`Tried the Brevis Demo Testnet — swapped ${amount} ${from} → ${receivedRounded} ${to}. Learn: ${projectLink} Created by @AmitKum955`);
+              const text = encodeURIComponent(`Tried the Brevis Demo Testnet — swapped ${amount} ${from} → ${receivedRounded} ${to}. Learn more: ${projectLink} Created by @AmitKum955`);
               window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
             }
             nextBtn.textContent = 'Close';
